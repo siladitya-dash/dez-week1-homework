@@ -78,7 +78,7 @@ AND lpep_pickup_datetime < '2019-11-01' \
 AND lpep_dropoff_datetime >= '2019-10-01' \
 AND lpep_dropoff_datetime < '2019-11-01' \
 AND trip_distance > 1 \
-AND trip_distance <= 3; \
+AND trip_distance <= 3;
 
 198924
 
@@ -100,7 +100,7 @@ AND lpep_pickup_datetime < '2019-11-01' \
 AND lpep_dropoff_datetime >= '2019-10-01' \
 AND lpep_dropoff_datetime < '2019-11-01' \
 AND trip_distance > 7 \
-AND trip_distance <= 10; \
+AND trip_distance <= 10;
 
 27678
 
@@ -110,7 +110,7 @@ WHERE lpep_pickup_datetime >= '2019-10-01' \
 AND lpep_pickup_datetime < '2019-11-01' \
 AND lpep_dropoff_datetime >= '2019-10-01' \
 AND lpep_dropoff_datetime < '2019-11-01' \
-AND trip_distance > 10; \
+AND trip_distance > 10;
 
 35189
 
@@ -128,7 +128,7 @@ LEFT OUTER JOIN taxi_zone_lookup z ON t."PULocationID" = z."LocationID" \
 WHERE DATE(t."lpep_pickup_datetime") = '2019-10-18' \
 GROUP BY z."Zone", t."PULocationID" \
 HAVING SUM(t."fare_amount") >= 13000 \
-ORDER BY total_amount DESC; \
+ORDER BY total_amount DESC;
 
 None of the answers match. Only a single Locaion has total fare above 13k \
 
