@@ -9,10 +9,10 @@ pip --version
 Ran the code in docker-compose.yaml to come to the conlusion that both db:5432 and postgres:5432 are the corect options
 
 # Prepare postgres
-## Create network
+## create Network
 docker network create pg-network
 
-## Run postgres image in network
+## postgres image in network
 docker run -it \
 -e POSTGRES_USER="root" \
 -e POSTGRES_PASSWORD="root" \
@@ -23,7 +23,7 @@ docker run -it \
 --name pg-database \
 postgres:17-alpine
 
-## Run pdAdmin image in network
+## pdAdmin image in network
 docker run -it \
 -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
 -e PGADMIN_DEFAULT_PASSWORD="root" \
@@ -122,37 +122,13 @@ WHERE trip_distance = (SELECT MAX(trip_distance) FROM green_taxi_trips); \
 2019-10-31 23:23:41
 
 # Question 5
-SELECT z."Zone", t."PULocationID", SUM(t."fare_amount") AS total_amount \
+SELECT z."Zone", SUM(t."total_amount") AS sum_total \
 FROM green_taxi_trips t \
 LEFT OUTER JOIN taxi_zone_lookup z ON t."PULocationID" = z."LocationID" \
 WHERE DATE(t."lpep_pickup_datetime") = '2019-10-18' \
-GROUP BY z."Zone", t."PULocationID" \
-HAVING SUM(t."fare_amount") >= 13000 \
-ORDER BY total_amount DESC;
-
-None of the answers match. Only a single Locaion has total fare above 13k, that is, "East Harlem North."
-
-However, if the questions wants to check the "top zones" on the given date where the "top zones" are first selected based on overall amount across all dates then the query would be as follows:
-
-WITH top_groups AS (
-    SELECT t."PULocationID", SUM(t."fare_amount") AS total_amount
-    FROM green_taxi_trips t
-    GROUP BY t."PULocationID"
-    HAVING SUM(t."fare_amount") > 13000
-    ORDER BY total_amount DESC
-    LIMIT 5
-)
-SELECT z."Zone", tg."PULocationID", SUM(t."fare_amount") AS total_amount_on_date
-FROM top_groups tg
-JOIN green_taxi_trips t ON tg."PULocationID" = t."PULocationID"
-LEFT OUTER JOIN taxi_zone_lookup z ON tg."PULocationID" = z."LocationID"
-WHERE DATE(t."lpep_pickup_datetime") = '2019-10-18'
-GROUP BY z."Zone", tg."PULocationID"
-ORDER BY total_amount_on_date DESC;
-
-The top 5, in this case, would be East Harlem North, East Harlem South, Elmhurst, Central Harlem, and Morningside Heights.
-
-This makes option A the closest answer, but still not entirely accurate.
+GROUP BY z."Zone" \
+HAVING SUM(t."total_amount") > 13000 \
+ORDER BY sum_total DESC;
 
 
 # Question 6
